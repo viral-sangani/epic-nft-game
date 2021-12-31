@@ -4,7 +4,13 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
+        game: ["DEBUG FREE TRIAL"],
+        avengers: ["Avengeance Heroic Avenger"],
+      },
+    },
   },
   plugins: [],
 };

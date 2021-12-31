@@ -1,3 +1,86 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'DEBUG FREE TRIAL';
+  src: url('/fonts/debug/DEBUGFREETRIAL.woff2') format('woff2'),
+      url('/fonts/debug/DEBUGFREETRIAL.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerItalic.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerBold.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerBold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerBoldItalic.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerBoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerNormal.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerNormal.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerNormal.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerNormal.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerBold.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerBold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerBoldItalic.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerBoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avengeance Heroic Avenger';
+  src: url('/fonts/avengeance/AvengeanceHeroicAvengerItalic.woff2') format('woff2'),
+      url('/fonts/avengeance/AvengeanceHeroicAvengerItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+

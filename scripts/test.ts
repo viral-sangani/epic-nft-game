@@ -13,22 +13,20 @@ const main = async () => {
   const gameContractFactory = await ethers.getContractFactory("NFTEpicGame");
   const gameContract = await gameContractFactory.deploy(
     // characterName
-    ["Iron Man", "Thor", "Spider Man", "Captain America"],
+    ["Iron Man", "Spider Man", "Dr. Strange"],
     // characterImageURI
     [
-      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/iron-man.png.webp",
-      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/thor.png.webp",
-      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/spidernam.webp",
-      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/captain-america.webp",
+      "https://i.imgur.com/pKd5Sdk.png",
+      "https://i.imgur.com/xVu4vFL.png",
+      "https://i.imgur.com/WMB6g9u.png",
     ],
     // characterMaxHp
-    [200, 250, 300, 250],
+    [200, 250, 300],
     // characterAttacks
     [
       [0, 1],
-      [0, 1],
       [2, 3],
-      [0, 1, 5],
+      [0, 5],
     ],
     "Elon Musk",
     "https://i.imgur.com/AksR0tt.png",
@@ -43,7 +41,7 @@ const main = async () => {
   let txn;
   txn = await gameContract.addAttacks(
     // attackNames
-    ["Punch", "Kick", "Web Shooter", "Splash", "Freeze", "Shield"],
+    ["Punch", "Kick", "Web Shooter", "Splash", "Freeze", "Time Stone"],
     // attackImages
     [
       "https://google.com",
@@ -78,6 +76,9 @@ const main = async () => {
 
   txn = await epicToken.faucet(userAddress, ethers.utils.parseEther("20"));
   await txn.wait();
+
+  var balance = await epicToken.balanceOf(userAddress);
+  console.log(`balance`, balance);
 
   txn = await epicToken.approve(
     gameContract.address,
