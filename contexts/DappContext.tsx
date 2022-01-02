@@ -14,8 +14,17 @@ import {
   GAME_CONTRACT_ADDRESS,
   TOKEN_CONTRACT_ADDRESS,
 } from "../utils/constants";
-import { CharacterProps, DappContextProps } from "../utils/contracts";
-import { parseDefaultCharacter } from "../utils/helper";
+import {
+  AttackProps,
+  BigBoss,
+  CharacterProps,
+  DappContextProps,
+} from "../utils/contracts";
+import {
+  parseAttacks,
+  parseBigBoss,
+  parseDefaultCharacter,
+} from "../utils/helper";
 
 const DappContext = createContext<DappContextProps>({
   isLoading: false,
@@ -24,6 +33,8 @@ const DappContext = createContext<DappContextProps>({
   defaultCharactersList: [],
   hasCharacter: false,
   gameContract: null,
+  allAttacks: [],
+  bigBoss: null,
   currentCharacter: {
     characterIndex: BigNumber.from(0),
     name: "",
@@ -36,6 +47,7 @@ const DappContext = createContext<DappContextProps>({
   connectWalletAction: async () => {},
   faucet: async () => {},
   mintCharacterNFT: async () => {},
+  attackBoss: async () => {},
 });
 
 export const DappProvider: React.FC = ({ children }) => {
@@ -55,7 +67,8 @@ export const useProviderData = () => {
   const [defaultCharactersList, setDefaultCharactersList] = useState<
     CharacterProps[]
   >([]);
-  const [charactersNFT, setCharactersNFT] = useState(null);
+  const [allAttacks, setAllAttacks] = useState<AttackProps[]>([]);
+  const [bigBoss, setBigBoss] = useState<BigBoss | null>(null);
   const [gameContract, setGameContract] = useState<ethers.Contract | null>(
     null
   );
@@ -87,7 +100,6 @@ export const useProviderData = () => {
     } catch (err) {
       console.log(err);
     }
-    setIsLoading(false);
   }, []);
 
   // Check for the connect network
@@ -133,7 +145,6 @@ export const useProviderData = () => {
         signer
       );
       setGameContract(contract);
-      setIsLoading(false);
     };
 
     if (currentAccount) {
@@ -164,14 +175,24 @@ export const useProviderData = () => {
 
   useEffect(() => {
     if (gameContract) {
-      checkIfUserHasNFT();
+      fetchNFTData();
+      fetchDefaultData();
     }
   }, [gameContract]);
 
-  const checkIfUserHasNFT = async () => {
+  const fetchDefaultData = async () => {
+    var data = await gameContract.getAllAttacks();
+    var attacks = [];
+    data.forEach((element) => {
+      attacks.push(parseAttacks(element));
+    });
+    setAllAttacks(attacks);
+  };
+
+  const fetchNFTData = async () => {
     var data = await gameContract.checkIfUserHasNFT();
     var character = parseDefaultCharacter(data);
-    console.log("data :>> ", data);
+    console.log("character :>> ", character);
     if (character.name == "") {
       setHasCharacter(false);
       var allDefaultCharacters = await gameContract.getAllDefaultCharacters();
@@ -184,6 +205,12 @@ export const useProviderData = () => {
       setHasCharacter(true);
       setCurrentCharacter(parseDefaultCharacter(data));
     }
+
+    var bossData = await gameContract.getBigBoss();
+    var boss = parseBigBoss(bossData);
+    console.log("boss :>> ", boss);
+    setBigBoss(boss);
+    setIsLoading(false);
   };
 
   const faucet = async () => {
@@ -228,10 +255,6 @@ export const useProviderData = () => {
         }
       );
     } else {
-      console.log(
-        ' ethers.utils.parseEther("10") :>> ',
-        ethers.utils.parseEther("10").toString()
-      );
       var txn = await tokenContract.approve(
         gameContract.address,
         ethers.utils.parseEther("10")
@@ -239,8 +262,15 @@ export const useProviderData = () => {
       await txn.wait();
       txn = await gameContract.mintCharacterNFT(characterIndex.toNumber());
       await txn.wait();
-      checkIfUserHasNFT();
+      fetchNFTData();
     }
+  };
+
+  const attackBoss = async (attackIndex: BigNumber) => {
+    var txn = await gameContract.attackBoss(attackIndex.toNumber());
+    txn.wait().then(async () => {
+      await fetchNFTData();
+    });
   };
 
   return {
@@ -250,9 +280,12 @@ export const useProviderData = () => {
     currentCharacter,
     defaultCharactersList,
     hasCharacter,
+    allAttacks,
     gameContract,
+    bigBoss,
     connectWalletAction,
     faucet,
     mintCharacterNFT,
+    attackBoss,
   };
 };

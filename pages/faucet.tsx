@@ -1,11 +1,21 @@
 import { BigNumber, ethers } from "ethers";
 import React from "react";
+import { Loader } from "../components/Loader";
 import { Navbar } from "../components/Navbav";
 import { useDapp } from "../contexts/DappContext";
 
 function Play() {
-  const { currentAccount, currentBalance, connectWalletAction, faucet } =
-    useDapp();
+  const {
+    currentAccount,
+    currentBalance,
+    isLoading,
+    connectWalletAction,
+    faucet,
+  } = useDapp();
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="h-screen bg-gray-800 text-center">

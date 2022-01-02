@@ -1,4 +1,5 @@
 import Img from "next/image";
+import Link from "next/link";
 
 export const Main = () => {
   return (
@@ -34,12 +35,14 @@ export const Main = () => {
               </p>
             </div>
             <div className="flex justify-center items-center mt-8">
-              <button
-                className="h-12 rounded-2xl mr-6 pr-6 pl-6 text-medium font-semibold tracking-wide shadow-md inline-flex items-center justify-center bg-blue-700 text-white transition duration-200 hover:bg-blue-900 focus:shadow-outline focus:outline-none"
-                style={{ fontFamily: "Arial" }}
-              >
-                Start the Game
-              </button>
+              <Link href="/play">
+                <a
+                  className="h-12 rounded-2xl mr-6 pr-6 pl-6 text-medium font-semibold tracking-wide shadow-md inline-flex items-center justify-center bg-blue-700 text-white transition duration-200 hover:bg-blue-900 focus:shadow-outline focus:outline-none"
+                  style={{ fontFamily: "Arial" }}
+                >
+                  Start the Game
+                </a>
+              </Link>
             </div>
           </div>
         </div>

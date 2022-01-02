@@ -1,11 +1,17 @@
 import React from "react";
 import GameArena from "../components/GameArena";
+import { Loader } from "../components/Loader";
 import MintCharacter from "../components/MintCharacter";
 import { useDapp } from "../contexts/DappContext";
 
 function Play() {
-  const { currentAccount, hasCharacter, connectWalletAction } = useDapp();
-  console.log("hasCharacter :>> ", hasCharacter);
+  const { currentAccount, hasCharacter, connectWalletAction, isLoading } =
+    useDapp();
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <>
       {!currentAccount ? (

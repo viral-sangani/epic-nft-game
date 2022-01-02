@@ -7,6 +7,8 @@ export interface DappContextProps {
   defaultCharactersList: CharacterProps[];
   hasCharacter: boolean;
   gameContract: ethers.Contract | null;
+  allAttacks: AttackProps[];
+  bigBoss: BigBoss;
   connectWalletAction: () => Promise<void>;
   faucet: () => Promise<void>;
   mintCharacterNFT: (characterIndex: BigNumber) => Promise<void>;
@@ -14,9 +16,9 @@ export interface DappContextProps {
 
 export interface AttackProps {
   attackIndex: BigNumber;
-  attackName: String;
+  attackName: string;
   attackDamage: BigNumber;
-  attackImage: String;
+  attackImage: string;
 }
 
 export interface SpecialAttackProps {
