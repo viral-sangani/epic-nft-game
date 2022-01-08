@@ -1,6 +1,5 @@
 import React from "react";
 import { ProgressBar, Step } from "react-step-progress-bar";
-import { ClaimHealthModal } from "./modals/ClaimHealthModal";
 
 interface Props {
   name: string;
@@ -16,15 +15,9 @@ export const HealthBar: React.FC<Props> = ({
   isBoss = false,
 }) => {
   var percent = (hp / maxHp) * 100;
-  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
     <>
-      <ClaimHealthModal
-        isOpen={isOpen}
-        closeModal={() => {
-          setIsOpen(false);
-        }}
-      />
       <div className="flex flex-col space-y-5">
         <div className="flex flex-row items-center">
           <span className="font-gasalt text-4xl font-bold text-white ">
@@ -34,16 +27,6 @@ export const HealthBar: React.FC<Props> = ({
           <span className="font-gasalt text-4xl text-white font-bold pl-3">
             {hp} / {maxHp}
           </span>
-          {!isBoss && (
-            <button
-              onClick={() => {
-                setIsOpen(true);
-              }}
-              className="underline text-white font-bold pl-3 font-gasalt text-xl"
-            >
-              Claim Health
-            </button>
-          )}
         </div>
         <ProgressBar
           height={20}

@@ -9,10 +9,12 @@ import { useDapp } from "../contexts/DappContext";
 import { AttackProps, SpecialAttackProps } from "../utils/contracts";
 import { getAttackAnimation } from "../utils/helper";
 import HealthBar from "./HealthBar";
+import { ClaimHealthModal } from "./modals/ClaimHealthModal";
 
 function GameArena() {
   const { currentCharacter, bigBoss, attackBoss, attackBossWithSpecialAttack } =
     useDapp();
+  const [isOpen, setIsOpen] = React.useState(false);
   const [attack, setAttack] = React.useState<boolean>(false);
   const [attackCharacter, setAttackCharacter] = React.useState<boolean>(false);
   const [attackIndex, setAttackIndex] = React.useState<BigNumber | null>(
@@ -63,6 +65,12 @@ function GameArena() {
 
   return (
     <>
+      <ClaimHealthModal
+        isOpen={isOpen}
+        closeModal={() => {
+          setIsOpen(false);
+        }}
+      />
       <div
         className="h-screen w-full bg-gray-800 pb-10 px-36"
         style={{
@@ -79,6 +87,15 @@ function GameArena() {
             </span>
           </a>
         </Link>
+        <button
+          onClick={() => {
+            console.log("clicked");
+            setIsOpen(true);
+          }}
+          className="underline text-white font-bold pl-3 font-gasalt text-xl absolute right-5 top-16"
+        >
+          Claim Health
+        </button>
         <div className="flex flex-col h-screen">
           {/* Title */}
           <div className="flex justify-center w-full flex-none">
