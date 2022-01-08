@@ -13,23 +13,25 @@ const main = async () => {
   const gameContractFactory = await ethers.getContractFactory("NFTEpicGame");
   const gameContract = await gameContractFactory.deploy(
     // characterName
-    ["Iron Man", "Spider Man", "Dr. Strange"],
+    ["Iron Man", "Thor", "Spider Man", "Captain America"],
     // characterImageURI
     [
-      "https://i.imgur.com/pKd5Sdk.png",
-      "https://i.imgur.com/xVu4vFL.png",
-      "https://i.imgur.com/WMB6g9u.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/iron-man.png.webp",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/thor.png.webp",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/spidernam.webp",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/captain-america.webp",
     ],
     // characterMaxHp
-    [200, 250, 300],
+    [200, 250, 300, 250],
     // characterAttacks
     [
-      [0, 1],
-      [2, 3],
-      [0, 5],
+      [0, 4, 5],
+      [1, 6, 7],
+      [0, 2, 3],
+      [0, 1, 8],
     ],
-    "Elon Musk",
-    "https://i.imgur.com/AksR0tt.png",
+    "Thanos",
+    "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/boss.webp",
     1000,
     50,
     epicToken.address
@@ -41,32 +43,47 @@ const main = async () => {
   let txn;
   txn = await gameContract.addAttacks(
     // attackNames
-    ["Punch", "Kick", "Web Shooter", "Splash", "Freeze", "Time Stone"],
+    [
+      "Punch",
+      "Kick",
+      "Spider Attack",
+      "Web Shooter",
+      "Missile Attack",
+      "Lazer Attack",
+      "Mjollnir Attack",
+      "Thunder Attack",
+      "KO Attack",
+    ],
     // attackImages
     [
-      "https://google.com",
-      "https://google.com",
-      "https://google.com",
-      "https://google.com",
-      "https://google.com",
-      "https://google.com",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099280/epic-nft-game/attacks/attack-1.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099281/epic-nft-game/attacks/attack-2.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099281/epic-nft-game/attacks/attack-3.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099281/epic-nft-game/attacks/attack-4.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099280/epic-nft-game/attacks/attack-5.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099280/epic-nft-game/attacks/attack-6.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099280/epic-nft-game/attacks/attack-7.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099280/epic-nft-game/attacks/attack-8.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099281/epic-nft-game/attacks/attack-9.png",
     ],
     // attackDamages
-    [50, 60, 40, 65, 60, 70],
+    [50, 60, 55, 65, 65, 50, 60, 65, 70],
     // attackIndexes
-    [0, 1, 2, 3, 4, 5]
+    [0, 1, 2, 3, 4, 5, 6, 7, 8]
   );
   await txn.wait();
 
   txn = await gameContract.addSpecialAttacks(
     // specialAttackNames
-    ["Reactor Shock"],
+    ["Nuke Attack"],
     // specialAttackImages
-    ["https://google.com"],
+    [
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641099742/epic-nft-game/special-attacks/special-attack-1.png",
+    ],
     // specialAttackDamages
-    [100],
+    [110],
     // specialAttackPrices
-    [2],
+    [ethers.utils.parseEther("4.5")],
     // specialAttackIndexes
     [0]
   );
@@ -74,20 +91,28 @@ const main = async () => {
 
   console.log(`userAddress`, userAddress);
 
-  txn = await epicToken.faucet(userAddress, ethers.utils.parseEther("20"));
-  await txn.wait();
+  // txn = await epicToken.faucet(userAddress, ethers.utils.parseEther("20"));
+  // await txn.wait();
 
-  var balance = await epicToken.balanceOf(userAddress);
-  console.log(`balance`, balance);
+  // txn = await epicToken.approve(
+  //   gameContract.address,
+  //   ethers.utils.parseEther("10")
+  // );
+  // await txn.wait();
 
-  txn = await epicToken.approve(
-    gameContract.address,
-    ethers.utils.parseEther("10")
-  );
-  await txn.wait();
+  // txn = await gameContract.mintCharacterNFT(2);
+  // await txn.wait();
 
-  txn = await gameContract.mintCharacterNFT(2);
-  await txn.wait();
+  // txn = await epicToken.approve(
+  //   gameContract.address,
+  //   ethers.utils.parseEther("4.5")
+  // );
+  // await txn.wait();
+  // txn = await gameContract.buySpecialAttack(0);
+  // await txn.wait();
+
+  // txn = await gameContract.attackSpecialBoss(0);
+  // await txn.wait();
 };
 
 const runMain = async () => {

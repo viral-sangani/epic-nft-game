@@ -1,4 +1,5 @@
 import React from "react";
+import "react-step-progress-bar/styles.css";
 import GameArena from "../components/GameArena";
 import { Loader } from "../components/Loader";
 import MintCharacter from "../components/MintCharacter";
@@ -15,7 +16,7 @@ function Play() {
   return (
     <>
       {!currentAccount ? (
-        <div className="h-screen bg-gray-800 text-center">
+        <div className="h-screen bg-gray-800 text-center overflow-auto">
           <div className="mx-auto max-w-7xl">
             <div className="h-screen flex justify-center items-center">
               <button

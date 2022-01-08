@@ -1,17 +1,23 @@
 import { BigNumber, ethers } from "ethers";
 export interface DappContextProps {
-  currentAccount: String | null;
+  currentAccount: string | null;
   isLoading: boolean;
-  currentBalance: String;
+  currentBalance: string;
   currentCharacter: CharacterProps;
   defaultCharactersList: CharacterProps[];
   hasCharacter: boolean;
   gameContract: ethers.Contract | null;
   allAttacks: AttackProps[];
+  allSpecialAttacks: SpecialAttackProps[];
   bigBoss: BigBoss;
   connectWalletAction: () => Promise<void>;
   faucet: () => Promise<void>;
   mintCharacterNFT: (characterIndex: BigNumber) => Promise<void>;
+  attackBoss: (attackIndex: BigNumber) => Promise<void>;
+  attackBossWithSpecialAttack: (attackSpecialIndex: BigNumber) => Promise<void>;
+  claimHealth: () => Promise<void>;
+  fetchSpecialAttacks: () => Promise<SpecialAttackProps[]>;
+  buySpecialAttack: (price: BigNumber, index: BigNumber) => Promise<void>;
 }
 
 export interface AttackProps {
@@ -24,24 +30,25 @@ export interface AttackProps {
 export interface SpecialAttackProps {
   price: BigNumber;
   specialAttackIndex: BigNumber;
-  specialAttackName: String;
+  specialAttackName: string;
   specialAttackDamage: BigNumber;
-  specialAttackImage: String;
+  specialAttackImage: string;
 }
 
 export interface CharacterProps {
   characterIndex: BigNumber;
-  name: String;
-  imageURI: String;
+  name: string;
+  imageURI: string;
   hp: BigNumber;
   maxHp: BigNumber;
   attacks: BigNumber[];
   specialAttacks: BigNumber[];
+  lastRegenTime: BigNumber;
 }
 
 export interface BigBoss {
-  name: String;
-  imageURI: String;
+  name: string;
+  imageURI: string;
   hp: BigNumber;
   maxHp: BigNumber;
   attackDamage: BigNumber;

@@ -1,6 +1,11 @@
 import { BigNumber } from "ethers";
 import attackAnimationOne from "../utils/attack-animation-1.json";
-import { AttackProps, BigBoss, CharacterProps } from "./contracts";
+import {
+  AttackProps,
+  BigBoss,
+  CharacterProps,
+  SpecialAttackProps,
+} from "./contracts";
 
 export const parseDefaultCharacter = (data: any): CharacterProps => {
   var res: CharacterProps = {
@@ -11,6 +16,7 @@ export const parseDefaultCharacter = (data: any): CharacterProps => {
     maxHp: data.maxHp,
     name: data.name,
     specialAttacks: data.specialAttacks,
+    lastRegenTime: data.lastRegenTime,
   };
   return res;
 };
@@ -21,6 +27,17 @@ export const parseAttacks = (data: any): AttackProps => {
     attackIndex: data.attackIndex,
     attackImage: data.attackImage,
     attackName: data.attackName,
+  };
+  return res;
+};
+
+export const parseSpecialAttacks = (data: any): SpecialAttackProps => {
+  var res: SpecialAttackProps = {
+    price: data.price,
+    specialAttackDamage: data.specialAttackDamage,
+    specialAttackIndex: data.specialAttackIndex,
+    specialAttackImage: data.specialAttackImage,
+    specialAttackName: data.specialAttackName,
   };
   return res;
 };
@@ -43,6 +60,18 @@ export const getAttackAnimation = (attackIndex: BigNumber) => {
   } else if (attackIndex.toNumber() == 1) {
     return attackAnimationOne;
   } else if (attackIndex.toNumber() == 2) {
+    return attackAnimationOne;
+  } else if (attackIndex.toNumber() == 3) {
+    return attackAnimationOne;
+  } else if (attackIndex.toNumber() == 4) {
+    return attackAnimationOne;
+  } else if (attackIndex.toNumber() == 5) {
+    return attackAnimationOne;
+  } else if (attackIndex.toNumber() == 6) {
+    return attackAnimationOne;
+  } else if (attackIndex.toNumber() == 7) {
+    return attackAnimationOne;
+  } else if (attackIndex.toNumber() == 8) {
     return attackAnimationOne;
   }
 };

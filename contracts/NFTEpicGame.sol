@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -12,10 +13,11 @@ import "hardhat/console.sol";
 
 contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
     using Counters for Counters.Counter;
+    using SafeMath for uint256;
 
     Counters.Counter private _tokenIds;
     address epicToken;
-
+    uint256 regenTime = 60;
     struct CharacterAttributes {
         uint256 characterIndex;
         string name;
@@ -24,6 +26,7 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
         uint256 maxHp;
         uint256[] attacks;
         uint256[] specialAttacks;
+        uint256 lastRegenTime;
     }
 
     struct AttackType {
@@ -65,6 +68,7 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
         uint256 characterIndex
     );
     event AttackComplete(uint256 newBossHp, uint256 newPlayerHp);
+    event RegenCompleted(uint256 newHp);
 
     constructor(
         // All the characters attributes
@@ -90,7 +94,6 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
             charAttribute.attacks = characterAttacks[i];
 
             defaultCharacters.push(charAttribute);
-
             CharacterAttributes memory c = defaultCharacters[i];
             console.log(
                 "Done initializing %s w/ HP %s, img %s",
@@ -167,7 +170,7 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
             IERC20(epicToken).allowance(msg.sender, address(this)) >= 10 ether,
             "Please approve the required token transfer before minting"
         );
-        IERC20(epicToken).transferFrom(msg.sender, address(this), msg.value);
+        IERC20(epicToken).transferFrom(msg.sender, address(this), 10 ether);
         uint256 newItemId = _tokenIds.current();
         _safeMint(msg.sender, newItemId);
         nftHolderAttributes[newItemId] = CharacterAttributes({
@@ -177,7 +180,8 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
             hp: defaultCharacters[_characterIndex].hp,
             maxHp: defaultCharacters[_characterIndex].maxHp,
             attacks: defaultCharacters[_characterIndex].attacks,
-            specialAttacks: defaultCharacters[_characterIndex].specialAttacks
+            specialAttacks: defaultCharacters[_characterIndex].specialAttacks,
+            lastRegenTime: block.timestamp
         });
         console.log(
             "Minted NFT w/ tokenId %s and characterIndex %s",
@@ -191,6 +195,33 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
             IERC20(epicToken).balanceOf(address(this))
         );
         emit CharacterNFTMinted(msg.sender, newItemId, _characterIndex);
+    }
+
+    function claimHealth() external {
+        require(
+            nftHolders[msg.sender] != 0,
+            "You don't have a character to claim health"
+        );
+        require(
+            IERC20(epicToken).allowance(msg.sender, address(this)) >= 0.1 ether,
+            "Please approve the required token transfer before minting"
+        );
+        IERC20(epicToken).transferFrom(msg.sender, address(this), 0.1 ether);
+        uint256 tokenId = nftHolders[msg.sender];
+        CharacterAttributes memory character = nftHolderAttributes[tokenId];
+        uint256 currentTime = block.timestamp;
+        uint256 timeSinceLastRegen = currentTime - character.lastRegenTime;
+
+        if (timeSinceLastRegen > regenTime) {
+            uint256 newHp = character.hp + timeSinceLastRegen.div(regenTime);
+            if (newHp > character.maxHp) {
+                newHp = character.maxHp;
+            }
+            character.hp = newHp;
+            character.lastRegenTime = currentTime;
+            nftHolderAttributes[tokenId] = character;
+            emit RegenCompleted(newHp);
+        }
     }
 
     function attackBoss(uint256 attackIndex) public {
@@ -224,23 +255,57 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
         emit AttackComplete(bigBoss.hp, player.hp);
     }
 
+    function attackSpecialBoss(uint256 attackIndex) public {
+        uint256 nftTokenIdOfPlayer = nftHolders[msg.sender];
+        CharacterAttributes storage player = nftHolderAttributes[
+            nftTokenIdOfPlayer
+        ];
+        require(player.hp > 0, "Error: character must have HP to attack boss.");
+        require(bigBoss.hp > 0, "Error: boss must have HP.");
+        uint256 attackDamage = 0;
+        for (uint256 i = 0; i < player.specialAttacks.length; i++) {
+            if (attackIndex == player.specialAttacks[i]) {
+                attackDamage = allSpecialAttacks[attackIndex]
+                    .specialAttackDamage;
+            }
+        }
+        require(attackDamage > 0, "Error: attack must have damage.");
+        if (bigBoss.hp < attackDamage) {
+            bigBoss.hp = 0;
+        } else {
+            bigBoss.hp = bigBoss.hp - attackDamage;
+        }
+
+        if (player.hp < bigBoss.attackDamage) {
+            player.hp = 0;
+        } else {
+            player.hp = player.hp - bigBoss.attackDamage;
+        }
+
+        console.log("Player attacked boss. New boss hp: %s", bigBoss.hp);
+        console.log("Boss attacked player. New player hp: %s\n", player.hp);
+        emit AttackComplete(bigBoss.hp, player.hp);
+    }
+
     function buySpecialAttack(uint256 specialAttackIndex) public payable {
         uint256 nftTokenIdOfPlayer = nftHolders[msg.sender];
         require(
             nftTokenIdOfPlayer > 0,
             "Error: must have NFT to buy special attack."
         );
+
         CharacterAttributes storage player = nftHolderAttributes[
             nftTokenIdOfPlayer
         ];
         require(
-            player.hp > 0,
-            "Error: character must have HP to buy special attack."
-        );
-        require(
-            allSpecialAttacks[specialAttackIndex].price * (1 ether) >=
-                msg.value,
+            IERC20(epicToken).allowance(msg.sender, address(this)) >=
+                allSpecialAttacks[specialAttackIndex].price,
             "Error: user must provide enough token to buy special attack."
+        );
+        IERC20(epicToken).transferFrom(
+            msg.sender,
+            address(this),
+            allSpecialAttacks[specialAttackIndex].price
         );
         player.specialAttacks.push(specialAttackIndex);
         emit AttackComplete(bigBoss.hp, player.hp);

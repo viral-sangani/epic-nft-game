@@ -19,11 +19,13 @@ import {
   BigBoss,
   CharacterProps,
   DappContextProps,
+  SpecialAttackProps,
 } from "../utils/contracts";
 import {
   parseAttacks,
   parseBigBoss,
   parseDefaultCharacter,
+  parseSpecialAttacks,
 } from "../utils/helper";
 
 const DappContext = createContext<DappContextProps>({
@@ -34,6 +36,7 @@ const DappContext = createContext<DappContextProps>({
   hasCharacter: false,
   gameContract: null,
   allAttacks: [],
+  allSpecialAttacks: [],
   bigBoss: null,
   currentCharacter: {
     characterIndex: BigNumber.from(0),
@@ -43,11 +46,16 @@ const DappContext = createContext<DappContextProps>({
     maxHp: BigNumber.from(0),
     attacks: [BigNumber.from(0)],
     specialAttacks: [BigNumber.from(0)],
+    lastRegenTime: BigNumber.from(0),
   },
   connectWalletAction: async () => {},
   faucet: async () => {},
   mintCharacterNFT: async () => {},
   attackBoss: async () => {},
+  attackBossWithSpecialAttack: async () => {},
+  claimHealth: async () => {},
+  fetchSpecialAttacks: async () => [],
+  buySpecialAttack: async () => {},
 });
 
 export const DappProvider: React.FC = ({ children }) => {
@@ -60,14 +68,17 @@ export const useDapp = () => useContext<DappContextProps>(DappContext);
 
 export const useProviderData = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [currentAccount, setCurrentAccount] = useState<String | null>(null);
-  const [currentBalance, setCurrentBalance] = useState<String | null>(null);
+  const [currentAccount, setCurrentAccount] = useState<string | null>(null);
+  const [currentBalance, setCurrentBalance] = useState<string | null>(null);
   const [currentCharacter, setCurrentCharacter] = useState<CharacterProps>();
   const [hasCharacter, setHasCharacter] = useState(false);
   const [defaultCharactersList, setDefaultCharactersList] = useState<
     CharacterProps[]
   >([]);
   const [allAttacks, setAllAttacks] = useState<AttackProps[]>([]);
+  const [allSpecialAttacks, setAllSpecialAttacks] = useState<
+    SpecialAttackProps[]
+  >([]);
   const [bigBoss, setBigBoss] = useState<BigBoss | null>(null);
   const [gameContract, setGameContract] = useState<ethers.Contract | null>(
     null
@@ -151,7 +162,7 @@ export const useProviderData = () => {
       fetchNFTMetadata();
       fetchBalance();
     }
-  }, [currentAccount]);
+  }, [currentAccount, hasCharacter]);
 
   const fetchBalance = async () => {
     console.log("fetchBalance called");
@@ -176,9 +187,8 @@ export const useProviderData = () => {
   useEffect(() => {
     if (gameContract) {
       fetchNFTData();
-      fetchDefaultData();
     }
-  }, [gameContract]);
+  }, [gameContract, hasCharacter]);
 
   const fetchDefaultData = async () => {
     var data = await gameContract.getAllAttacks();
@@ -187,6 +197,15 @@ export const useProviderData = () => {
       attacks.push(parseAttacks(element));
     });
     setAllAttacks(attacks);
+
+    var data = await gameContract.getAllSpecialAttacks();
+
+    var specialAttacks = [];
+    data.forEach((element) => {
+      specialAttacks.push(parseSpecialAttacks(element));
+    });
+    console.log("specialAttacks :>> ", specialAttacks);
+    setAllSpecialAttacks(specialAttacks);
   };
 
   const fetchNFTData = async () => {
@@ -210,6 +229,7 @@ export const useProviderData = () => {
     var boss = parseBigBoss(bossData);
     console.log("boss :>> ", boss);
     setBigBoss(boss);
+    await fetchDefaultData();
     setIsLoading(false);
   };
 
@@ -230,15 +250,18 @@ export const useProviderData = () => {
     } else {
       const id = toast.loading("Please wait...");
       await tokenContract.faucet(currentAccount, ethers.utils.parseEther("20"));
-      await fetchBalance();
-      toast.update(id, {
-        render: "20 EPIC token added to your wallet",
-        type: "success",
-        isLoading: false,
-        draggable: true,
-        closeOnClick: true,
-        autoClose: 3500,
-      });
+
+      setTimeout(async () => {
+        await fetchBalance();
+        toast.update(id, {
+          render: "20 EPIC token added to your wallet",
+          type: "success",
+          isLoading: false,
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3500,
+        });
+      }, 3000);
     }
   };
 
@@ -262,7 +285,28 @@ export const useProviderData = () => {
       await txn.wait();
       txn = await gameContract.mintCharacterNFT(characterIndex.toNumber());
       await txn.wait();
-      fetchNFTData();
+      setIsLoading(true);
+      toast(`AVENGERS....`, {
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3000,
+        progress: undefined,
+        type: "success",
+      });
+      setTimeout(async () => {
+        toast(`ASSEMBLE....`, {
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3000,
+          progress: undefined,
+          type: "success",
+        });
+      }, 3000);
+      setTimeout(async () => {
+        await fetchNFTData();
+        await fetchDefaultData();
+        setIsLoading(false);
+      }, 6000);
     }
   };
 
@@ -273,6 +317,78 @@ export const useProviderData = () => {
     });
   };
 
+  const attackBossWithSpecialAttack = async (attackSpecialIndex: BigNumber) => {
+    var txn = await gameContract.attackSpecialBoss(
+      attackSpecialIndex.toNumber()
+    );
+    txn.wait().then(async () => {
+      await fetchNFTData();
+    });
+  };
+
+  const claimHealth = async () => {
+    const id = toast.loading("Please wait...");
+    var txn = await tokenContract.approve(
+      gameContract.address,
+      ethers.utils.parseEther("0.1")
+    );
+    await txn.wait();
+    txn = await gameContract.claimHealth();
+    await txn.wait();
+    toast.update(id, {
+      render: "Successfully Recovered Health",
+      type: "success",
+      isLoading: false,
+      draggable: true,
+      closeOnClick: true,
+      autoClose: 3000,
+    });
+    fetchNFTData();
+  };
+
+  const fetchSpecialAttacks = async () => {
+    const data = await gameContract.getAllSpecialAttacks();
+    const specialAttacks: SpecialAttackProps[] = [];
+    data.forEach((element) => {
+      specialAttacks.push(parseSpecialAttacks(element));
+    });
+    return specialAttacks;
+  };
+
+  const buySpecialAttack = async (price: BigNumber, index: BigNumber) => {
+    console.log("price :>> ", ethers.utils.formatEther(price));
+    console.log(
+      "BigNumber.from(currentBalance) :>> ",
+      ethers.utils.formatEther(BigNumber.from(currentBalance))
+    );
+    if (BigNumber.from(currentBalance).lt(price)) {
+      toast(
+        `You don't have enough tokens to mint a character. Please get more tokens.`,
+        {
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3500,
+          progress: undefined,
+          type: "error",
+        }
+      );
+    } else {
+      const id = toast.loading("Please wait...");
+      var txn = await tokenContract.approve(gameContract.address, price);
+      await txn.wait();
+      txn = await gameContract.buySpecialAttack(index);
+      await txn.wait();
+      toast.update(id, {
+        render: "Successfully bought special attack",
+        type: "success",
+        isLoading: false,
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3000,
+      });
+    }
+  };
+
   return {
     isLoading,
     currentAccount,
@@ -281,11 +397,16 @@ export const useProviderData = () => {
     defaultCharactersList,
     hasCharacter,
     allAttacks,
+    allSpecialAttacks,
     gameContract,
     bigBoss,
     connectWalletAction,
     faucet,
     mintCharacterNFT,
     attackBoss,
+    attackBossWithSpecialAttack,
+    claimHealth,
+    fetchSpecialAttacks,
+    buySpecialAttack,
   };
 };

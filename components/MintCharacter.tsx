@@ -1,4 +1,5 @@
 import Img from "next/image";
+import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDapp } from "../contexts/DappContext";
 import { CharacterProps } from "../utils/contracts";
@@ -38,6 +39,11 @@ const MintCharacter = () => {
         backgroundSize: "cover",
       }}
     >
+      <Link href="/faucet">
+        <a className="absolute top-5 right-5 bg-white text-red-500 text-center text-xl font-bold px-3 py-2 rounded-xl">
+          Faucet
+        </a>
+      </Link>
       <div className="flex flex-col items-center">
         <div className="p-2 bg-white flex justify-center my-10 pt-8 px-10 rounded-3xl border-red-500 border-4">
           <span className="font-avengers text-red-500 text-6xl text-center">
