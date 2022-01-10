@@ -5,8 +5,6 @@ const main = async () => {
   let accounts: Signer[];
   accounts = await ethers.getSigners();
 
-  const userAddress = await accounts[0].getAddress();
-
   const epicTokenFactory = await ethers.getContractFactory("EPICToken");
   const epicToken = await epicTokenFactory.deploy("EPIC Token", "EPIC");
 
@@ -37,8 +35,6 @@ const main = async () => {
     epicToken.address
   );
   await gameContract.deployed();
-  console.log("Game Contract deployed to : ", gameContract.address);
-  console.log("Epic Token deployed to : ", epicToken.address);
 
   let txn;
   txn = await gameContract.addAttacks(
