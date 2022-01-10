@@ -1,5 +1,4 @@
 import { BigNumber } from "ethers";
-import Img from "next/image";
 import Link from "next/link";
 import React from "react";
 import Lottie from "react-lottie";
@@ -214,7 +213,7 @@ const AttackItem = ({
           startAttack(attack);
         }}
       >
-        <Img height={50} width={50} src={attack.attackImage} />
+        <img height={50} width={50} src={attack.attackImage} />
       </div>
     </>
   );
@@ -248,7 +247,7 @@ const SpecialAttackItem = ({
           startSpecialAttack(attack);
         }}
       >
-        <Img height={50} width={50} src={attack.specialAttackImage} />
+        <img height={50} width={50} src={attack.specialAttackImage} />
       </div>
     </>
   );

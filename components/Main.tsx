@@ -1,4 +1,3 @@
-import Img from "next/image";
 import Link from "next/link";
 
 export const Main = () => {
@@ -9,7 +8,7 @@ export const Main = () => {
           className="flex w-full h-full bg-top bg-cover justify-center items-center 
     overflow-hidden lg:w-1/2"
         >
-          <Img
+          <img
             src="https://9to5mac.com/2015/04/30/marvel-future-fight-action-rpg-avengers-age-ultron/mff_promo2/"
             height={"300"}
             width={"500"}

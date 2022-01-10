@@ -1,5 +1,4 @@
 import { Dialog, Transition } from "@headlessui/react";
-import Img from "next/image";
 import { Fragment } from "react";
 import { useDapp } from "../../contexts/DappContext";
 import { REGEN_TIME } from "../../utils/constants";
@@ -57,7 +56,7 @@ export const ClaimHealthModal = ({
             >
               <div className="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl border-red-500 border-[3px]">
                 <div className="flex flex-col items-center">
-                  <Img src="/images/regen.png" height={100} width={100} />
+                  <img src="/images/regen.png" height={100} width={100} />
                   <span className="text-4xl font-medium leading-6 text-red-500 font-avengers mt-8">
                     you can claim {healthToClaim} hp points
                   </span>

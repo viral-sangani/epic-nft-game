@@ -1,4 +1,3 @@
-import Img from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDapp } from "../contexts/DappContext";
@@ -86,7 +85,7 @@ const CharacterItem = ({
           setIsOpen(true);
         }}
       >
-        <Img
+        <img
           className="cursor-pointer"
           src={item.imageURI}
           height={400}
