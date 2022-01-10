@@ -1,4 +1,5 @@
 import { BigNumber, ethers } from "ethers";
+import Head from "next/head";
 import React from "react";
 import { Loader } from "../components/Loader";
 import { Navbar } from "../components/Navbav";
@@ -13,6 +14,11 @@ function Play() {
 
   return (
     <>
+      <Head>
+        <title>Epic NFT Game</title>
+        <meta name="description" content="Epic NFT Game" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <section className="w-full px-3 antialiased bg-indigo-600 lg:px-6">
         <div className="mx-auto max-w-7xl">
           <Navbar />
