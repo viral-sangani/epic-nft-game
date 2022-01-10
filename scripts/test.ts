@@ -33,7 +33,7 @@ const main = async () => {
     "Thanos",
     "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/boss.webp",
     1000,
-    50,
+    20,
     epicToken.address
   );
   await gameContract.deployed();
@@ -75,44 +75,60 @@ const main = async () => {
 
   txn = await gameContract.addSpecialAttacks(
     // specialAttackNames
-    ["Nuke Attack"],
+    ["Bomb Attack", "Explosion Attack", "Nuclear Attack", "Epic Attack"],
     // specialAttackImages
     [
       "https://res.cloudinary.com/viral-sangani/image/upload/v1641099742/epic-nft-game/special-attacks/special-attack-1.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641617790/epic-nft-game/special-attacks/special-attack-2.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641617792/epic-nft-game/special-attacks/special-attack-3.png",
+      "https://res.cloudinary.com/viral-sangani/image/upload/v1641617794/epic-nft-game/special-attacks/special-attack-4.png",
     ],
     // specialAttackDamages
-    [110],
+    [80, 100, 110, 140],
     // specialAttackPrices
-    [ethers.utils.parseEther("4.5")],
+    [
+      ethers.utils.parseEther("4.5"),
+      ethers.utils.parseEther("5.5"),
+      ethers.utils.parseEther("7"),
+      ethers.utils.parseEther("10"),
+    ],
     // specialAttackIndexes
-    [0]
+    [0, 1, 2, 3]
   );
   await txn.wait();
 
-  console.log(`userAddress`, userAddress);
+  txn = await epicToken.faucet(userAddress, ethers.utils.parseEther("20"));
+  await txn.wait();
 
-  // txn = await epicToken.faucet(userAddress, ethers.utils.parseEther("20"));
-  // await txn.wait();
+  txn = await epicToken.approve(
+    gameContract.address,
+    ethers.utils.parseEther("10")
+  );
+  await txn.wait();
 
-  // txn = await epicToken.approve(
-  //   gameContract.address,
-  //   ethers.utils.parseEther("10")
-  // );
-  // await txn.wait();
+  txn = await gameContract.mintCharacterNFT(2);
+  await txn.wait();
 
-  // txn = await gameContract.mintCharacterNFT(2);
-  // await txn.wait();
+  console.log("Character Minted");
 
-  // txn = await epicToken.approve(
-  //   gameContract.address,
-  //   ethers.utils.parseEther("4.5")
-  // );
-  // await txn.wait();
-  // txn = await gameContract.buySpecialAttack(0);
-  // await txn.wait();
+  txn = await epicToken.approve(
+    gameContract.address,
+    ethers.utils.parseEther("10")
+  );
+  await txn.wait();
 
-  // txn = await gameContract.attackSpecialBoss(0);
-  // await txn.wait();
+  console.log("10 EPIC Token approved");
+
+  txn = await gameContract.buySpecialAttack(0);
+  await txn.wait();
+
+  txn = await gameContract.buySpecialAttack(1);
+  await txn.wait();
+
+  console.log("Special Attack bought");
+
+  var data = await gameContract.tokenURI(1);
+  console.log("Token URI : ", data);
 };
 
 const runMain = async () => {

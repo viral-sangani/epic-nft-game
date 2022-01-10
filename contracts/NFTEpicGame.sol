@@ -361,6 +361,39 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
         string memory strHp = Strings.toString(charAttributes.hp);
         string memory strMaxHp = Strings.toString(charAttributes.maxHp);
 
+        string memory specialAttacksStr = "";
+        string memory attacksStr = "";
+
+        for (uint256 i = 0; i < charAttributes.specialAttacks.length; i++) {
+            uint256 index = charAttributes.specialAttacks[i];
+            specialAttacksStr = string(
+                abi.encodePacked(
+                    specialAttacksStr,
+                    ', {"trait_type": "Special Attack - ',
+                    allSpecialAttacks[index].specialAttackName,
+                    '", "value": ',
+                    Strings.toString(
+                        allSpecialAttacks[index].specialAttackDamage
+                    ),
+                    "}"
+                )
+            );
+        }
+
+        for (uint256 i = 0; i < charAttributes.attacks.length; i++) {
+            uint256 index = charAttributes.attacks[i];
+            attacksStr = string(
+                abi.encodePacked(
+                    attacksStr,
+                    ', {"trait_type": "',
+                    allAttacks[index].attackName,
+                    '", "value": ',
+                    Strings.toString(allAttacks[index].attackDamage),
+                    "}"
+                )
+            );
+        }
+
         string memory json = Base64.encode(
             bytes(
                 string(
@@ -369,13 +402,16 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
                         charAttributes.name,
                         " -- NFT #: ",
                         Strings.toString(_tokenId),
-                        '", "description": "This is an NFT that lets people play in the game Metaverse Slayer!", "image": "',
+                        '", "description": "This is an NFT that lets people play in the Epic NFT Game!", "image": "',
                         charAttributes.imageURI,
                         '", "attributes": [{"trait_type": "Health Points", "value": ',
                         strHp,
                         ', "max_value": ',
                         strMaxHp,
-                        '}, ]}"'
+                        "}",
+                        specialAttacksStr,
+                        attacksStr,
+                        "]}"
                     )
                 )
             )
