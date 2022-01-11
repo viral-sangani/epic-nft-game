@@ -140,32 +140,7 @@ export const useProviderData = () => {
     }
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    checkIfWalletIsConnected();
-  }, [checkIfWalletIsConnected]);
-
-  useEffect(() => {
-    const fetchNFTMetadata = async () => {
-      console.log("Checking for Balance on address : ", currentAccount);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        GAME_CONTRACT_ADDRESS,
-        nftEpicGame.abi,
-        signer
-      );
-      setGameContract(contract);
-    };
-
-    if (currentAccount) {
-      fetchNFTMetadata();
-      fetchBalance();
-    }
-  }, [currentAccount, hasCharacter]);
-
   const fetchBalance = async () => {
-    console.log("fetchBalance called");
     var balance: string;
     if (tokenContract) {
       balance = await tokenContract.balanceOf(currentAccount);
@@ -184,34 +159,10 @@ export const useProviderData = () => {
     setCurrentBalance(balance.toString());
   };
 
-  useEffect(() => {
-    if (gameContract) {
-      fetchNFTData();
-    }
-  }, [gameContract, hasCharacter]);
-
-  const fetchDefaultData = async () => {
-    var data = await gameContract.getAllAttacks();
-    var attacks = [];
-    data.forEach((element) => {
-      attacks.push(parseAttacks(element));
-    });
-    setAllAttacks(attacks);
-
-    var data = await gameContract.getAllSpecialAttacks();
-
-    var specialAttacks = [];
-    data.forEach((element) => {
-      specialAttacks.push(parseSpecialAttacks(element));
-    });
-    console.log("specialAttacks :>> ", specialAttacks);
-    setAllSpecialAttacks(specialAttacks);
-  };
-
-  const fetchNFTData = async () => {
+  const fetchData = async () => {
     var data = await gameContract.checkIfUserHasNFT();
     var character = parseDefaultCharacter(data);
-    console.log("character :>> ", character);
+
     if (character.name == "") {
       setHasCharacter(false);
       var allDefaultCharacters = await gameContract.getAllDefaultCharacters();
@@ -227,9 +178,26 @@ export const useProviderData = () => {
 
     var bossData = await gameContract.getBigBoss();
     var boss = parseBigBoss(bossData);
-    console.log("boss :>> ", boss);
+
     setBigBoss(boss);
-    await fetchDefaultData();
+
+    // Fetch all the attacks and special attacks
+    var data = await gameContract.getAllAttacks();
+    var attacks = [];
+    data.forEach((element) => {
+      attacks.push(parseAttacks(element));
+    });
+    setAllAttacks(attacks);
+
+    var data = await gameContract.getAllSpecialAttacks();
+
+    var specialAttacks = [];
+    data.forEach((element) => {
+      specialAttacks.push(parseSpecialAttacks(element));
+    });
+    console.log("specialAttacks :>> ", specialAttacks);
+    setAllSpecialAttacks(specialAttacks);
+
     setIsLoading(false);
   };
 
@@ -249,19 +217,21 @@ export const useProviderData = () => {
       );
     } else {
       const id = toast.loading("Please wait...");
-      await tokenContract.faucet(currentAccount, ethers.utils.parseEther("20"));
+      var txn = await tokenContract.faucet(
+        currentAccount,
+        ethers.utils.parseEther("20")
+      );
+      await txn.wait();
 
-      setTimeout(async () => {
-        await fetchBalance();
-        toast.update(id, {
-          render: "20 EPIC token added to your wallet",
-          type: "success",
-          isLoading: false,
-          draggable: true,
-          closeOnClick: true,
-          autoClose: 3500,
-        });
-      }, 3000);
+      await fetchBalance();
+      toast.update(id, {
+        render: "20 EPIC token added to your wallet",
+        type: "success",
+        isLoading: false,
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3500,
+      });
     }
   };
 
@@ -303,8 +273,7 @@ export const useProviderData = () => {
         });
       }, 3000);
       setTimeout(async () => {
-        await fetchNFTData();
-        await fetchDefaultData();
+        await fetchData();
         setIsLoading(false);
       }, 6000);
     }
@@ -313,7 +282,7 @@ export const useProviderData = () => {
   const attackBoss = async (attackIndex: BigNumber) => {
     var txn = await gameContract.attackBoss(attackIndex.toNumber());
     txn.wait().then(async () => {
-      await fetchNFTData();
+      await fetchData();
     });
   };
 
@@ -322,7 +291,7 @@ export const useProviderData = () => {
       attackSpecialIndex.toNumber()
     );
     txn.wait().then(async () => {
-      await fetchNFTData();
+      await fetchData();
     });
   };
 
@@ -343,7 +312,7 @@ export const useProviderData = () => {
       closeOnClick: true,
       autoClose: 3000,
     });
-    fetchNFTData();
+    fetchData();
   };
 
   const fetchSpecialAttacks = async () => {
@@ -388,6 +357,36 @@ export const useProviderData = () => {
       });
     }
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    checkIfWalletIsConnected();
+  }, [checkIfWalletIsConnected]);
+
+  useEffect(() => {
+    const fetchNFTMetadata = async () => {
+      console.log("Checking for Balance on address : ", currentAccount);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        GAME_CONTRACT_ADDRESS,
+        nftEpicGame.abi,
+        signer
+      );
+      setGameContract(contract);
+    };
+
+    if (currentAccount) {
+      fetchNFTMetadata();
+      fetchBalance();
+    }
+  }, [currentAccount, hasCharacter]);
+
+  useEffect(() => {
+    if (gameContract) {
+      fetchData();
+    }
+  }, [gameContract, hasCharacter]);
 
   return {
     isLoading,
