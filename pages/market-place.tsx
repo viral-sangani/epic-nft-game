@@ -11,9 +11,7 @@ function SpecialAttack() {
   const {
     gameContract,
     isLoading,
-    currentAccount,
     currentCharacter,
-    connectWalletAction,
     fetchSpecialAttacks,
     buySpecialAttack,
   } = useDapp();

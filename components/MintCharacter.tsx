@@ -4,13 +4,6 @@ import { useDapp } from "../contexts/DappContext";
 import { CharacterProps } from "../utils/contracts";
 import { MintConfirmationModal } from "./modals/MintConfirmationModal";
 
-const urls = [
-  "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/iron-man.png.webp",
-  "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/thor.png.webp",
-  "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/spidernam.webp",
-  "https://res.cloudinary.com/viral-sangani/image/upload/v1640668788/epic-nft-game/captain-america.webp",
-];
-
 const MintCharacter = () => {
   const { defaultCharactersList, mintCharacterNFT, gameContract } = useDapp();
 
@@ -19,9 +12,6 @@ const MintCharacter = () => {
       console.log(
         `CharacterNFTMinted - sender: ${sender} tokenId: ${tokenId.toNumber()} characterIndex: ${characterIndex.toNumber()}`
       );
-      // alert(
-      //   `Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${gameContract}/${tokenId.toNumber()}`
-      // );
     };
     if (gameContract) {
       gameContract.on("CharacterNFTMinted", onCharacterMint);

@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import { useDapp } from "../contexts/DappContext";
 
 export const Navbar = () => {
-  const { currentAccount, currentBalance } = useDapp();
+  const { currentAccount } = useDapp();
   const router = useRouter();
-  console.log("router.pathname :>> ", router.pathname);
+
   return (
     <>
       <nav className="flex items-center w-full h-24 select-none">

@@ -1,5 +1,7 @@
 import { BigNumber } from "ethers";
 import attackAnimationOne from "../utils/attack-animation-1.json";
+import attackAnimationTwo from "../utils/attack-animation-2.json";
+import attackAnimationThree from "../utils/attack-animation-3.json";
 import {
   AttackProps,
   BigBoss,
@@ -54,24 +56,23 @@ export const parseBigBoss = (data: any): BigBoss => {
 };
 
 export const getAttackAnimation = (attackIndex: BigNumber) => {
-  console.log(`attackIndex.toNumber()`, attackIndex.toNumber());
   if (attackIndex.toNumber() == 0) {
     return attackAnimationOne;
   } else if (attackIndex.toNumber() == 1) {
-    return attackAnimationOne;
+    return attackAnimationTwo;
   } else if (attackIndex.toNumber() == 2) {
-    return attackAnimationOne;
+    return attackAnimationThree;
   } else if (attackIndex.toNumber() == 3) {
     return attackAnimationOne;
   } else if (attackIndex.toNumber() == 4) {
-    return attackAnimationOne;
+    return attackAnimationTwo;
   } else if (attackIndex.toNumber() == 5) {
-    return attackAnimationOne;
+    return attackAnimationThree;
   } else if (attackIndex.toNumber() == 6) {
     return attackAnimationOne;
   } else if (attackIndex.toNumber() == 7) {
-    return attackAnimationOne;
+    return attackAnimationTwo;
   } else if (attackIndex.toNumber() == 8) {
-    return attackAnimationOne;
+    return attackAnimationThree;
   }
 };

@@ -5,15 +5,9 @@ interface Props {
   name: string;
   maxHp: number;
   hp: number;
-  isBoss?: boolean;
 }
 
-export const HealthBar: React.FC<Props> = ({
-  hp,
-  maxHp,
-  name,
-  isBoss = false,
-}) => {
+export const HealthBar: React.FC<Props> = ({ hp, maxHp, name }) => {
   var percent = (hp / maxHp) * 100;
 
   return (

@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useDapp } from "../../contexts/DappContext";
-import { REGEN_TIME } from "../../utils/constants";
 
 export const ClaimHealthModal = ({
   isOpen,
@@ -14,7 +13,7 @@ export const ClaimHealthModal = ({
   var healthToClaim = (
     (Date.now() - currentCharacter.lastRegenTime.toNumber() * 1000) /
     1000 /
-    REGEN_TIME
+    60
   ).toFixed(0);
 
   return (

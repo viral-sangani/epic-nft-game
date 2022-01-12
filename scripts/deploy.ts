@@ -1,10 +1,6 @@
-import { Signer } from "ethers";
 import { ethers } from "hardhat";
 
 const main = async () => {
-  let accounts: Signer[];
-  accounts = await ethers.getSigners();
-
   const epicTokenFactory = await ethers.getContractFactory("EPICToken");
   const epicToken = await epicTokenFactory.deploy("EPIC Token", "EPIC");
   console.log(`epicToken`, epicToken.address);
@@ -93,6 +89,8 @@ const main = async () => {
     [0, 1, 2, 3]
   );
   await txn.wait();
+
+  console.log("DEPLOYED SUCCESSFULLY");
 };
 
 const runMain = async () => {

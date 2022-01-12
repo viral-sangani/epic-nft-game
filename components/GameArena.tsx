@@ -14,22 +14,23 @@ function GameArena() {
   const { currentCharacter, bigBoss, attackBoss, attackBossWithSpecialAttack } =
     useDapp();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [attack, setAttack] = React.useState<boolean>(false);
-  const [attackCharacter, setAttackCharacter] = React.useState<boolean>(false);
+  const [attackOnBoss, setAttackOnBoss] = React.useState<boolean>(false);
+  const [attackOnCharacter, setAttackOnCharacter] =
+    React.useState<boolean>(false);
   const [attackIndex, setAttackIndex] = React.useState<BigNumber | null>(
     BigNumber.from(0)
   );
 
   const style = useSpring({
-    from: { x: attack ? 20 : 0 },
-    to: { x: attack ? -20 : 0 },
+    from: { x: attackOnBoss ? 20 : 0 },
+    to: { x: attackOnBoss ? -20 : 0 },
     loop: true,
     config: { duration: 200 },
   });
 
   const characterstyle = useSpring({
-    from: { x: attackCharacter ? 20 : 0 },
-    to: { x: attackCharacter ? -20 : 0 },
+    from: { x: attackOnCharacter ? 20 : 0 },
+    to: { x: attackOnCharacter ? -20 : 0 },
     loop: true,
     config: { duration: 200 },
   });
@@ -37,13 +38,13 @@ function GameArena() {
   const startAttack = async (attackType: AttackProps) => {
     await attackBoss(attackType.attackIndex);
     setAttackIndex(attackType.attackIndex);
-    setAttack(true);
+    setAttackOnBoss(true);
     setTimeout(() => {
-      setAttack(false);
+      setAttackOnBoss(false);
       setAttackIndex(BigNumber.from(8));
-      setAttackCharacter(true);
+      setAttackOnCharacter(true);
       setTimeout(() => {
-        setAttackCharacter(false);
+        setAttackOnCharacter(false);
       }, 3000);
     }, 3000);
   };
@@ -51,13 +52,13 @@ function GameArena() {
   const startSpecialAttack = async (attackType: SpecialAttackProps) => {
     await attackBossWithSpecialAttack(attackType.specialAttackIndex);
     setAttackIndex(BigNumber.from(8));
-    setAttack(true);
+    setAttackOnBoss(true);
     setTimeout(() => {
-      setAttack(false);
+      setAttackOnBoss(false);
       setAttackIndex(BigNumber.from(8));
-      setAttackCharacter(true);
+      setAttackOnCharacter(true);
       setTimeout(() => {
-        setAttackCharacter(false);
+        setAttackOnCharacter(false);
       }, 3000);
     }, 3000);
   };
@@ -115,7 +116,6 @@ function GameArena() {
                 name={bigBoss.name}
                 maxHp={bigBoss.maxHp.toNumber()}
                 hp={bigBoss.hp.toNumber()}
-                isBoss
               />
             </div>
           )}
@@ -128,7 +128,7 @@ function GameArena() {
                   src={currentCharacter.imageURI}
                 />
               </animated.div>
-              {attackCharacter && (
+              {attackOnCharacter && (
                 <AttackAnimation attackIndex={BigNumber.from(0)} />
               )}
               <div className="flex flex-row space-x-3">
@@ -162,7 +162,7 @@ function GameArena() {
                 <img className="h-full w-auto" src={bigBoss.imageURI} />
               </animated.div>
 
-              {attack && <AttackAnimation attackIndex={attackIndex} />}
+              {attackOnBoss && <AttackAnimation attackIndex={attackIndex} />}
             </div>
           </div>
         </div>

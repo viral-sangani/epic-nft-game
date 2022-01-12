@@ -1,14 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Loader } from "../components/Loader";
 import { Navbar } from "../components/Navbav";
-import { useDapp } from "../contexts/DappContext";
 
 const Home: NextPage = () => {
-  const { isLoading } = useDapp();
-  if (isLoading) {
-    return <Loader />;
-  }
   return (
     <>
       <Head>

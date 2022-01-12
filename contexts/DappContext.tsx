@@ -325,11 +325,6 @@ export const useProviderData = () => {
   };
 
   const buySpecialAttack = async (price: BigNumber, index: BigNumber) => {
-    console.log("price :>> ", ethers.utils.formatEther(price));
-    console.log(
-      "BigNumber.from(currentBalance) :>> ",
-      ethers.utils.formatEther(BigNumber.from(currentBalance))
-    );
     if (BigNumber.from(currentBalance).lt(price)) {
       toast(
         `You don't have enough tokens to mint a character. Please get more tokens.`,
@@ -364,8 +359,7 @@ export const useProviderData = () => {
   }, [checkIfWalletIsConnected]);
 
   useEffect(() => {
-    const fetchNFTMetadata = async () => {
-      console.log("Checking for Balance on address : ", currentAccount);
+    const getGameContract = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -377,7 +371,7 @@ export const useProviderData = () => {
     };
 
     if (currentAccount) {
-      fetchNFTMetadata();
+      getGameContract();
       fetchBalance();
     }
   }, [currentAccount, hasCharacter]);
