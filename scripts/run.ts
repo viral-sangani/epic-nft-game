@@ -30,7 +30,7 @@ const main = async () => {
     ],
     "Thanos",
     "https://omifnpbr75msemzvrgk5gddyvkqdp3myeuuem62hsmhkulixy57a.arweave.net/cxBWvDH_WSIzNYmV0wx4qqA37ZglKEZ7R5MOqi0Xx34",
-    1000,
+    100000,
     20,
     epicToken.address
   );
