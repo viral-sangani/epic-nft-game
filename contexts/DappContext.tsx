@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import epicToken from "../artifacts/contracts/EPICToken.sol/EPICToken.json";
 import nftEpicGame from "../artifacts/contracts/NFTEpicGame.sol/NFTEpicGame.json";
 import {
+  CHAIN_ID,
+  CHAIN_ID_INT,
   GAME_CONTRACT_ADDRESS,
   TOKEN_CONTRACT_ADDRESS,
 } from "../utils/constants";
@@ -38,6 +40,7 @@ const DappContext = createContext<DappContextProps>({
   allAttacks: [],
   allSpecialAttacks: [],
   bigBoss: null,
+  error: "",
   currentCharacter: {
     characterIndex: BigNumber.from(0),
     name: "",
@@ -86,6 +89,7 @@ export const useProviderData = () => {
   const [tokenContract, setTokenContract] = useState<ethers.Contract | null>(
     null
   );
+  const [error, setError] = useState<string | null>(null);
 
   const checkIfWalletIsConnected = useCallback(async () => {
     try {
@@ -96,17 +100,8 @@ export const useProviderData = () => {
         return;
       } else {
         console.log("We have the ethereum object", ethereum);
-        const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        if (accounts.length !== 0) {
-          const account = accounts[0];
-          console.log("Found an authorized account:", account);
-          setCurrentAccount(account);
-        } else {
-          console.log("No authorized account found");
-        }
       }
+
       checkNetwork();
     } catch (err) {
       console.log(err);
@@ -118,6 +113,30 @@ export const useProviderData = () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const { chainId } = await provider.getNetwork();
+      if (chainId === CHAIN_ID_INT) {
+        console.log("chainId :>> ", chainId);
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        if (accounts.length !== 0) {
+          const account = accounts[0];
+          console.log("Found an authorized account:", account);
+          setCurrentAccount(account);
+        } else {
+          console.log("No authorized account found");
+        }
+      } else {
+        console.log("HERE");
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [
+            {
+              chainId: CHAIN_ID,
+            },
+          ],
+        });
+        setError("Please connect to the Rinkeby network");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -217,21 +236,32 @@ export const useProviderData = () => {
       );
     } else {
       const id = toast.loading("Please wait...");
-      var txn = await tokenContract.faucet(
-        currentAccount,
-        ethers.utils.parseEther("20")
-      );
-      await txn.wait();
+      try {
+        var txn = await tokenContract.faucet(
+          currentAccount,
+          ethers.utils.parseEther("20")
+        );
+        await txn.wait();
 
-      await fetchBalance();
-      toast.update(id, {
-        render: "20 EPIC token added to your wallet",
-        type: "success",
-        isLoading: false,
-        draggable: true,
-        closeOnClick: true,
-        autoClose: 3500,
-      });
+        await fetchBalance();
+        toast.update(id, {
+          render: "20 EPIC token added to your wallet",
+          type: "success",
+          isLoading: false,
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3500,
+        });
+      } catch (err) {
+        toast.update(id, {
+          render: "Error in faucet",
+          type: "error",
+          isLoading: false,
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3500,
+        });
+      }
     }
   };
 
@@ -248,6 +278,7 @@ export const useProviderData = () => {
         }
       );
     } else {
+      const id = toast.loading("Please wait...");
       var txn = await tokenContract.approve(
         gameContract.address,
         ethers.utils.parseEther("10")
@@ -256,20 +287,22 @@ export const useProviderData = () => {
       txn = await gameContract.mintCharacterNFT(characterIndex.toNumber());
       await txn.wait();
       setIsLoading(true);
-      toast(`AVENGERS....`, {
+      toast.update(id, {
+        render: "AVENGERS",
+        type: "success",
+        isLoading: false,
         draggable: true,
         closeOnClick: true,
-        autoClose: 3000,
-        progress: undefined,
-        type: "success",
+        autoClose: 3500,
       });
       setTimeout(async () => {
-        toast(`ASSEMBLE....`, {
+        toast.update(id, {
+          render: "ASSEMBLE....",
+          type: "success",
+          isLoading: false,
           draggable: true,
           closeOnClick: true,
-          autoClose: 3000,
-          progress: undefined,
-          type: "success",
+          autoClose: 3500,
         });
       }, 3000);
       setTimeout(async () => {
@@ -280,38 +313,67 @@ export const useProviderData = () => {
   };
 
   const attackBoss = async (attackIndex: BigNumber) => {
+    const id = toast.loading("Please wait...");
     var txn = await gameContract.attackBoss(attackIndex.toNumber());
     txn.wait().then(async () => {
+      toast.update(id, {
+        render: "Attack Completed",
+        type: "success",
+        isLoading: false,
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3500,
+      });
       await fetchData();
     });
   };
 
   const attackBossWithSpecialAttack = async (attackSpecialIndex: BigNumber) => {
+    const id = toast.loading("Please wait...");
     var txn = await gameContract.attackSpecialBoss(
       attackSpecialIndex.toNumber()
     );
     txn.wait().then(async () => {
+      toast.update(id, {
+        render: "Attack Completed",
+        type: "success",
+        isLoading: false,
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3500,
+      });
       await fetchData();
     });
   };
 
   const claimHealth = async () => {
     const id = toast.loading("Please wait...");
-    var txn = await tokenContract.approve(
-      gameContract.address,
-      ethers.utils.parseEther("0.1")
-    );
-    await txn.wait();
-    txn = await gameContract.claimHealth();
-    await txn.wait();
-    toast.update(id, {
-      render: "Successfully Recovered Health",
-      type: "success",
-      isLoading: false,
-      draggable: true,
-      closeOnClick: true,
-      autoClose: 3000,
-    });
+    try {
+      var txn = await tokenContract.approve(
+        gameContract.address,
+        ethers.utils.parseEther("0.1")
+      );
+      await txn.wait();
+      txn = await gameContract.claimHealth();
+      await txn.wait();
+      toast.update(id, {
+        render: "Successfully Recovered Health",
+        type: "success",
+        isLoading: false,
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3000,
+      });
+    } catch (err) {
+      toast.update(id, {
+        render: "Error in claiming health",
+        type: "error",
+        isLoading: false,
+        draggable: true,
+        closeOnClick: true,
+        autoClose: 3000,
+      });
+    }
     fetchData();
   };
 
@@ -338,24 +400,38 @@ export const useProviderData = () => {
       );
     } else {
       const id = toast.loading("Please wait...");
-      var txn = await tokenContract.approve(gameContract.address, price);
-      await txn.wait();
-      txn = await gameContract.buySpecialAttack(index);
-      await txn.wait();
-      toast.update(id, {
-        render: "Successfully bought special attack",
-        type: "success",
-        isLoading: false,
-        draggable: true,
-        closeOnClick: true,
-        autoClose: 3000,
-      });
+      try {
+        var txn = await tokenContract.approve(gameContract.address, price);
+        await txn.wait();
+        txn = await gameContract.buySpecialAttack(index);
+        await txn.wait();
+        toast.update(id, {
+          render: "Successfully bought special attack",
+          type: "success",
+          isLoading: false,
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3000,
+        });
+      } catch (err) {
+        toast.update(id, {
+          render: "Error in buying special attack",
+          type: "error",
+          isLoading: false,
+          draggable: true,
+          closeOnClick: true,
+          autoClose: 3000,
+        });
+      }
     }
   };
 
   useEffect(() => {
     setIsLoading(true);
     checkIfWalletIsConnected();
+    window.ethereum.on("chainChanged", (chainId) => {
+      window.location.reload();
+    });
   }, [checkIfWalletIsConnected]);
 
   useEffect(() => {
@@ -393,6 +469,7 @@ export const useProviderData = () => {
     allSpecialAttacks,
     gameContract,
     bigBoss,
+    error,
     connectWalletAction,
     faucet,
     mintCharacterNFT,

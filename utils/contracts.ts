@@ -10,6 +10,7 @@ export interface DappContextProps {
   allAttacks: AttackProps[];
   allSpecialAttacks: SpecialAttackProps[];
   bigBoss: BigBoss;
+  error: string;
   connectWalletAction: () => Promise<void>;
   faucet: () => Promise<void>;
   mintCharacterNFT: (characterIndex: BigNumber) => Promise<void>;

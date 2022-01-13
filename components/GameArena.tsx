@@ -72,7 +72,7 @@ function GameArena() {
         }}
       />
       <div
-        className="h-screen w-full bg-gray-800 pb-10 px-36"
+        className="h-screen w-full bg-gray-800 px-36"
         style={{
           backgroundImage: "url('/images/game-arena-bg-1.jpg')",
           backgroundRepeat: "no-repeat",
@@ -81,10 +81,8 @@ function GameArena() {
         }}
       >
         <Link href="/market-place">
-          <a className="absolute right-5 top-10 flex flex-col cursor-pointer">
-            <span className="text-white text-center underline">
-              Market Place
-            </span>
+          <a className="absolute right-5 top-9 flex flex-col cursor-pointer">
+            <span className="text-white text-center ">Market Place</span>
           </a>
         </Link>
         <button
@@ -92,34 +90,36 @@ function GameArena() {
             console.log("clicked");
             setIsOpen(true);
           }}
-          className="underline text-white font-bold pl-3 font-gasalt text-xl absolute right-5 top-16"
+          className=" text-white pl-3 absolute right-5 top-16"
         >
           Claim Health
         </button>
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen justify-between">
           {/* Title */}
-          <div className="flex justify-center w-full flex-none">
-            <div className="p-2 bg-white mt-5 mb-4 pt-8 w-full text-center px-10 rounded-3xl border-red-500 border-4">
-              <span className="font-avengers text-red-500 text-5xl text-center">
-                Fight Arena
-              </span>
+          <div className="flex flex-col">
+            <div className="flex justify-center w-full flex-none">
+              <div className="p-2 bg-white mt-5 mb-4 pt-8 w-full text-center px-10 rounded-3xl border-red-500 border-4">
+                <span className="font-avengers text-red-500 text-5xl text-center">
+                  Fight Arena
+                </span>
+              </div>
             </div>
+            {currentCharacter && (
+              <div className="grid grid-cols-2 gap-x-36">
+                <HealthBar
+                  name={currentCharacter.name}
+                  maxHp={currentCharacter.maxHp.toNumber()}
+                  hp={currentCharacter.hp.toNumber()}
+                />
+                <HealthBar
+                  name={bigBoss.name}
+                  maxHp={bigBoss.maxHp.toNumber()}
+                  hp={bigBoss.hp.toNumber()}
+                />
+              </div>
+            )}
           </div>
-          {currentCharacter && (
-            <div className="grid grid-cols-2 gap-x-36">
-              <HealthBar
-                name={currentCharacter.name}
-                maxHp={currentCharacter.maxHp.toNumber()}
-                hp={currentCharacter.hp.toNumber()}
-              />
-              <HealthBar
-                name={bigBoss.name}
-                maxHp={bigBoss.maxHp.toNumber()}
-                hp={bigBoss.hp.toNumber()}
-              />
-            </div>
-          )}
-          <div className="flex flex-row justify-between h-2/3">
+          <div className="mb-10 flex flex-row justify-between h-2/3">
             {/* Character sectiom */}
             <div className="h-full flex flex-col justify-end items-center relative">
               <animated.div className="h-full pt-6" style={characterstyle}>

@@ -41,6 +41,14 @@ function Play() {
       ) : (
         <MintCharacter />
       )}
+      {/* <div className="absolute bottom-5 left-5 text-white">
+        <a
+          href={`https://rinkeby.etherscan.io/address/${GAME_CONTRACT_ADDRESS}`}
+          target={`_blank`}
+        >
+          Contract at - {GAME_CONTRACT_ADDRESS}
+        </a>
+      </div> */}
     </>
   );
 }

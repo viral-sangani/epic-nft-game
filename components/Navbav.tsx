@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useDapp } from "../contexts/DappContext";
 
 export const Navbar = () => {
-  const { currentAccount } = useDapp();
+  const { currentAccount, connectWalletAction } = useDapp();
   const router = useRouter();
 
   return (
@@ -67,12 +67,18 @@ export const Navbar = () => {
                       )}
                   </span>
                 ) : (
-                  <a
-                    href="#_"
+                  <button
+                    onClick={() => {
+                      if (router.pathname == "/") {
+                        router.push("/play");
+                      } else {
+                        connectWalletAction();
+                      }
+                    }}
                     className="font-bold inline-flex items-center justify-center px-4 py-2 mr-1 text-base leading-6 text-indigo-600 whitespace-no-wrap transition duration-150 ease-in-out bg-white border border-transparent rounded-full hover:bg-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700"
                   >
-                    Connect Wallet
-                  </a>
+                    {router.pathname == "/" ? "Play Game" : "Connect Wallet"}
+                  </button>
                 )}
               </div>
             </div>

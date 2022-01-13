@@ -29,8 +29,13 @@ const MintCharacter = () => {
       }}
     >
       <Link href="/faucet">
-        <a className="absolute top-5 right-5 bg-white text-red-500 text-center text-xl font-bold px-3 py-2 rounded-xl">
+        <a className="absolute top-5 right-5 font-bold inline-flex items-center justify-center px-4 py-2 mr-1 text-base leading-6 text-red-600 whitespace-no-wrap transition duration-150 ease-in-out bg-white border border-transparent rounded-full hover:bg-white focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700">
           Faucet
+        </a>
+      </Link>
+      <Link href="/">
+        <a className="absolute top-5 left-5 font-bold inline-flex items-center justify-center px-4 py-2 mr-1 text-base leading-6 text-red-600 whitespace-no-wrap transition duration-150 ease-in-out bg-white border border-transparent rounded-full hover:bg-white focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-700">
+          Home
         </a>
       </Link>
       <div className="flex flex-col items-center">

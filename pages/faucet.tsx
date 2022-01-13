@@ -1,13 +1,19 @@
 import { BigNumber, ethers } from "ethers";
 import Head from "next/head";
 import React from "react";
+import AddNetwork from "../components/AddNetwork";
 import { Loader } from "../components/Loader";
 import { Navbar } from "../components/Navbav";
 import { useDapp } from "../contexts/DappContext";
 
 function Play() {
-  const { currentAccount, currentBalance, isLoading, faucet } = useDapp();
-
+  const { currentAccount, currentBalance, isLoading, faucet, error } =
+    useDapp();
+  if (error) {
+    if (error === "Please connect to the Rinkeby network") {
+      return <AddNetwork />;
+    }
+  }
   if (isLoading) {
     return <Loader />;
   }
