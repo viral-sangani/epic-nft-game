@@ -45,6 +45,7 @@ export interface CharacterProps {
   attacks: BigNumber[];
   specialAttacks: BigNumber[];
   lastRegenTime: BigNumber;
+  tokenId: BigNumber;
 }
 
 export interface BigBoss {

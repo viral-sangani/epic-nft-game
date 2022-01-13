@@ -1,8 +1,8 @@
 // Add your smart contract address here
 export const GAME_CONTRACT_ADDRESS =
-  "0xf73627A073789d95467D5E91b94a7d8D8DbCC5c8";
+  "0xAE1A68329DCbD22cD5dfc1bFdD24E88962b7CF96";
 export const TOKEN_CONTRACT_ADDRESS =
-  "0x9a1e8892bBa18cDE8fe0043082f21464Aa830cF6";
+  "0x8c4deB29c44edF92C5224Df41e6076fe68a0F2fF";
 
 export const RINKBY_MAINNET_PARAMS = {
   chainId: "0x04",

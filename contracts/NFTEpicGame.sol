@@ -27,6 +27,7 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
         uint256[] attacks;
         uint256[] specialAttacks;
         uint256 lastRegenTime;
+        uint256 tokenId;
     }
 
     struct AttackType {
@@ -181,7 +182,8 @@ contract NFTEpicGame is ERC721, ReentrancyGuard, Ownable {
             maxHp: defaultCharacters[_characterIndex].maxHp,
             attacks: defaultCharacters[_characterIndex].attacks,
             specialAttacks: defaultCharacters[_characterIndex].specialAttacks,
-            lastRegenTime: block.timestamp
+            lastRegenTime: block.timestamp,
+            tokenId: newItemId
         });
         console.log(
             "Minted NFT w/ tokenId %s and characterIndex %s",

@@ -5,6 +5,7 @@ import Lottie from "react-lottie";
 import { animated, useSpring } from "react-spring";
 import ReactTooltip from "react-tooltip";
 import { useDapp } from "../contexts/DappContext";
+import { GAME_CONTRACT_ADDRESS } from "../utils/constants";
 import { AttackProps, SpecialAttackProps } from "../utils/contracts";
 import { getAttackAnimation } from "../utils/helper";
 import HealthBar from "./HealthBar";
@@ -80,28 +81,49 @@ function GameArena() {
           backgroundSize: "cover",
         }}
       >
-        <Link href="/market-place">
-          <a className="absolute right-5 top-9 flex flex-col cursor-pointer">
-            <span className="text-white text-center ">Market Place</span>
-          </a>
-        </Link>
-        <button
-          onClick={() => {
-            console.log("clicked");
-            setIsOpen(true);
-          }}
-          className=" text-white pl-3 absolute right-5 top-16"
-        >
-          Claim Health
-        </button>
         <div className="flex flex-col h-screen justify-between">
           {/* Title */}
           <div className="flex flex-col">
-            <div className="flex justify-center w-full flex-none">
-              <div className="p-2 bg-white mt-5 mb-4 pt-8 w-full text-center px-10 rounded-3xl border-red-500 border-4">
-                <span className="font-avengers text-red-500 text-5xl text-center">
+            <div className="w-full">
+              <div
+                className="p-2 bg-white mt-5 mb-4 px-10 rounded-3xl border-red-500 border-4"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto 1fr",
+                  gridTemplateRows: "auto",
+                  gap: "0px 0px",
+                }}
+              >
+                <div className="flex flex-row items-center">
+                  <Link href="/">
+                    <a className="hover:text-red-500 font-semibold text-lg mr-6">
+                      Home
+                    </a>
+                  </Link>
+                  <Link href="/market-place">
+                    <a className="hover:text-red-500 font-semibold text-lg mr-6">
+                      Market Place
+                    </a>
+                  </Link>
+                  <button
+                    className="hover:text-red-500 font-semibold text-lg mr-3"
+                    onClick={() => {
+                      setIsOpen(true);
+                    }}
+                  >
+                    Claim Health
+                  </button>
+                </div>
+                <span className="font-avengers text-red-500 text-5xl text-center pt-8">
                   Fight Arena
                 </span>
+                <a
+                  className="hover:text-red-500 font-semibold text-lg justify-self-end self-center"
+                  href={`https://testnets.opensea.io/assets/${GAME_CONTRACT_ADDRESS}/${currentCharacter.tokenId.toNumber()}`}
+                  target="_blank"
+                >
+                  View on OpenSea
+                </a>
               </div>
             </div>
             {currentCharacter && (

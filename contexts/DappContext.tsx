@@ -50,6 +50,7 @@ const DappContext = createContext<DappContextProps>({
     attacks: [BigNumber.from(0)],
     specialAttacks: [BigNumber.from(0)],
     lastRegenTime: BigNumber.from(0),
+    tokenId: BigNumber.from(0),
   },
   connectWalletAction: async () => {},
   faucet: async () => {},

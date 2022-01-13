@@ -19,6 +19,7 @@ export const parseDefaultCharacter = (data: any): CharacterProps => {
     name: data.name,
     specialAttacks: data.specialAttacks,
     lastRegenTime: data.lastRegenTime,
+    tokenId: data.tokenId,
   };
   return res;
 };
