@@ -97,6 +97,8 @@ export const useProviderData = () => {
       const { ethereum } = window;
       if (!ethereum) {
         console.log("Make sure you have MetaMask!");
+
+        alert("Make sure you have MetaMask!");
         setIsLoading(false);
         return;
       } else {
@@ -430,9 +432,10 @@ export const useProviderData = () => {
   useEffect(() => {
     setIsLoading(true);
     checkIfWalletIsConnected();
-    window.ethereum.on("chainChanged", (chainId) => {
-      window.location.reload();
-    });
+    if (window.ethereum)
+      window.ethereum.on("chainChanged", (chainId) => {
+        window.location.reload();
+      });
   }, [checkIfWalletIsConnected]);
 
   useEffect(() => {
