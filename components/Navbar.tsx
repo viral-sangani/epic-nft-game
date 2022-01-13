@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useDapp } from "../contexts/DappContext";
 
 export const Navbar = () => {
   const { currentAccount, connectWalletAction } = useDapp();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -53,6 +55,16 @@ export const Navbar = () => {
                     }  md:px-0 lg:mx-5 md:text-center md:hover:text-white`}
                   >
                     Market Place
+                  </a>
+                </Link>
+
+                <Link href="/how-to-play">
+                  <a
+                    className={`inline-block px-4 py-2 mx-2 font-bold text-left ${
+                      router.pathname == "/how-to-play" ? "text-white" : ""
+                    }  md:px-0 lg:mx-5 md:text-center md:hover:text-white`}
+                  >
+                    How to Play
                   </a>
                 </Link>
               </div>

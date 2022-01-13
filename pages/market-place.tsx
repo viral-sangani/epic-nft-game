@@ -3,7 +3,7 @@ import Head from "next/head";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { Loader } from "../components/Loader";
-import { Navbar } from "../components/Navbav";
+import { Navbar } from "../components/Navbar";
 import { useDapp } from "../contexts/DappContext";
 import { SpecialAttackProps } from "../utils/contracts";
 

@@ -3,7 +3,7 @@ import Head from "next/head";
 import React from "react";
 import AddNetwork from "../components/AddNetwork";
 import { Loader } from "../components/Loader";
-import { Navbar } from "../components/Navbav";
+import { Navbar } from "../components/Navbar";
 import { useDapp } from "../contexts/DappContext";
 
 function Play() {

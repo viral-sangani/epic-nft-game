@@ -2,7 +2,7 @@ declare let window: any;
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { Navbar } from "../components/Navbav";
+import { Navbar } from "../components/Navbar";
 import { TOKEN_CONTRACT_ADDRESS } from "../utils/constants";
 
 const Home: NextPage = () => {

@@ -7,7 +7,7 @@ import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   var { route } = useRouter();
-  if (route != "/") {
+  if (route != "/" && route != "/how-to-play") {
     return (
       <DappProvider>
         <ToastContainer
