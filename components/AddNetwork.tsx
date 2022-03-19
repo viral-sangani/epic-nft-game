@@ -1,6 +1,6 @@
 declare let window: any;
 import React from "react";
-import { RINKBY_MAINNET_PARAMS } from "../utils/constants";
+import { POLYGON_MAINNET_PARAMS } from "../utils/constants";
 
 function AddNetwork() {
   return (
@@ -17,7 +17,7 @@ function AddNetwork() {
             onClick={async () => {
               await window.ethereum.request({
                 method: "wallet_addEthereumChain",
-                params: [RINKBY_MAINNET_PARAMS],
+                params: [POLYGON_MAINNET_PARAMS],
               });
             }}
             className="font-bold inline-flex items-center justify-center px-4 py-2 mr-1 text-base leading-6 text-indigo-600 whitespace-no-wrap transition duration-150 ease-in-out bg-white border border-transparent rounded-full hover:bg-white focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700"

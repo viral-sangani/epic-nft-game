@@ -5,7 +5,6 @@ import Lottie from "react-lottie";
 import { animated, useSpring } from "react-spring";
 import ReactTooltip from "react-tooltip";
 import { useDapp } from "../contexts/DappContext";
-import { GAME_CONTRACT_ADDRESS } from "../utils/constants";
 import { AttackProps, SpecialAttackProps } from "../utils/contracts";
 import { getAttackAnimation } from "../utils/helper";
 import HealthBar from "./HealthBar";
@@ -117,13 +116,13 @@ function GameArena() {
                 <span className="font-avengers text-red-500 text-5xl text-center pt-8">
                   Fight Arena
                 </span>
-                <a
+                {/* <a
                   className="hover:text-red-500 font-semibold text-lg justify-self-end self-center"
                   href={`https://testnets.opensea.io/assets/${GAME_CONTRACT_ADDRESS}/${currentCharacter.tokenId.toNumber()}`}
                   target="_blank"
                 >
                   View on OpenSea
-                </a>
+                </a> */}
               </div>
             </div>
             {currentCharacter && (

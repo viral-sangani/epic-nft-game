@@ -17,14 +17,9 @@ export default {
     hardhat: {
       allowUnlimitedContractSize: true,
     },
-    avaxFujiTestnet: {
+    polygon: {
       allowUnlimitedContractSize: true,
-      url: "https://api.avax-test.network/ext/bc/C/rpc",
-      accounts: [process.env.ACCOUNT_PRIVATE_KEY],
-    },
-    rinkby: {
-      allowUnlimitedContractSize: true,
-      url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+      url: `https://poly-mainnet.gateway.pokt.network/v1/lb/${process.env.POCKET_TOKEN}`,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY],
     },
   },
