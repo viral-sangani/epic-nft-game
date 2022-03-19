@@ -54,8 +54,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-NFT based Multiplayer Game where you can mint an NFT character and fight against a boss. This game is built on Ethereum and NFTs can be sold on OpenSea. 
-
+NFT based Multiplayer Game where you can mint an NFT character and fight against a boss. This game is built on Polygon Network.
 - The game requires an EPIC token, which you can get for free from the game website itself.
 - The game also has a marketplace if you want to add more attacks and special powers to your character.
 - All the players in the game have to collectively try to defeat the boss.
